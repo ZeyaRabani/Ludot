@@ -1,0 +1,37 @@
+# POLKALUDOT
+
+## What is POLKALUDOT
+
+## Features
+
+## Demo
+
+## How to run
+
+To run server
+
+```bash
+cd server
+
+# Install dependency
+
+npm i
+
+# Run the app
+
+node index.js
+```
+
+To run the web site
+
+```bash
+cd web_app
+
+# Install dependency
+
+npm i
+
+# Run the app
+
+npm run dev
+```
