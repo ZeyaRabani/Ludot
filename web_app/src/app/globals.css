@@ -122,23 +122,23 @@
   }
 }
 
-.game-container {
+/* .game-container {
   max-width: 800px;
   margin: 0 auto;
   text-align: center;
   padding: 20px;
-}
+} */
 
-.board-container {
+/* .board-container {
   border: 3px solid #333;
   padding: 5px;
   background-color: #f8f8f8;
   border-radius: 8px;
-}
+} */
 
-.board-row {
+/* .board-row {
   display: flex;
-}
+} */
 
 .cell {
   position: relative;
@@ -167,8 +167,8 @@
   font-size: 12px;
 }
 
-.player-1 { background-color: #ffcccb; }
-.player-2 { background-color: #add8e6; }
+.player-1 { background-color: #ffcccb; border-radius: 3px;}
+.player-2 { background-color: #add8e6; border-radius: 3px;}
 
 .ladder {
   background-color: #e8f5e9;

@@ -1,6 +1,6 @@
-# POLKALUDOT
+# Snakes on a chain
 
-## What is POLKALUDOT
+## What is Snakes on a chain
 
 ## Features
 
