@@ -2,6 +2,8 @@
 
 ## What is Snakes on a chain
 
+This is a snakes and ladders game instead now.
+
 ## Features
 
 ## Demo
