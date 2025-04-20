@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 "use client"
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { web3Accounts, web3Enable } from '@polkadot/extension-dapp'
 import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types'
@@ -39,15 +39,25 @@ export default function Page() {
     const [diceValue, setDiceValue] = useState(0);
     const [gameMessage, setGameMessage] = useState('');
     const [connected, setConnected] = useState<boolean>(false);
+    const [isClient, setIsClient] = useState(false);
+
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
 
     const connectWallet = async () => {
         try {
-            await web3Enable('SnakeAndLadder');
-            const allAccounts = await web3Accounts();
-            setAccounts(allAccounts);
-            if (allAccounts.length > 0) {
-                setSelectedAccount(allAccounts[0]);
-                setConnected(true);
+            // @ts-ignore
+            if (typeof window !== 'undefined' && window.injectedWeb3) {
+                await web3Enable('SnakeAndLadder');
+                const allAccounts = await web3Accounts();
+                setAccounts(allAccounts);
+                if (allAccounts.length > 0) {
+                    setSelectedAccount(allAccounts[0]);
+                    setConnected(true);
+                }
+            } else {
+                console.error('Polkadot.js extension not found');
             }
         } catch (error) {
             console.error('Error connecting wallet:', error);
@@ -155,9 +165,11 @@ export default function Page() {
 
             {!connected ? (
                 <div className='flex items-center justify-center min-h-[80vh]'>
-                <Button onClick={connectWallet}>
-                    Connect Wallet
-                </Button>
+                    {isClient && (
+                        <Button onClick={connectWallet}>
+                            Connect Wallet
+                        </Button>
+                    )}
                 </div>
             ) : (
                 <div className='flex flex-col items-center space-y-4'>
