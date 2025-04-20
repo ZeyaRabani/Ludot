@@ -18,6 +18,7 @@ Telegram’s Web App integration simplified onboarding (no wallets needed initia
 XCM (cross-chain messaging) allows future interoperability with DeFi parachains like Acala.
 
 ## Demo
+https://www.loom.com/share/17068c8a81e343e5a087e059bc5fe452
 
 ## How to run
 Deployed on Vercel
