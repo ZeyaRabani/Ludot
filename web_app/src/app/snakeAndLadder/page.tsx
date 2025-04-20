@@ -2,6 +2,9 @@
 "use client"
 
 import React, { useState } from 'react'
+import { Button } from '@/components/ui/button'
+import { web3Accounts, web3Enable } from '@polkadot/extension-dapp'
+import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types'
 
 const BOARD_SIZE = 100;
 
@@ -29,10 +32,31 @@ const SNAKE_LADDERS = {
 };
 
 export default function Page() {
+    const [accounts, setAccounts] = useState<InjectedAccountWithMeta[]>([]);
+    const [selectedAccount, setSelectedAccount] = useState<InjectedAccountWithMeta | null>(null);
     const [players, setPlayers] = useState([{ position: 1 }, { position: 1 }]);
     const [currentPlayer, setCurrentPlayer] = useState(0);
     const [diceValue, setDiceValue] = useState(0);
     const [gameMessage, setGameMessage] = useState('');
+    const [connected, setConnected] = useState<boolean>(false);
+
+    const connectWallet = async () => {
+        try {
+            await web3Enable('SnakeAndLadder');
+            const allAccounts = await web3Accounts();
+            setAccounts(allAccounts);
+            if (allAccounts.length > 0) {
+                setSelectedAccount(allAccounts[0]);
+                setConnected(true);
+            }
+        } catch (error) {
+            console.error('Error connecting wallet:', error);
+        }
+    };
+
+    const handleAccountChange = (account: InjectedAccountWithMeta) => {
+        setSelectedAccount(account);
+    };
 
     const rollDice = () => {
         const value = Math.floor(Math.random() * 6) + 1;
@@ -128,24 +152,52 @@ export default function Page() {
 
     return (
         <div className='px-16 py-4 min-h-screen bg-gradient-to-br from-green-100 via-blue-100 to-purple-100'>
-            <div className='flex flex-col items-center space-y-4'>
-                <h1 className='font-semibold text-2xl'>Snake and Ladder Game</h1>
-                <div className='game-info'>
-                    <p>Current Player: Player {currentPlayer + 1}</p>
-                    <p>Dice Value: {diceValue}</p>
-                    <p>{gameMessage}</p>
+
+            {!connected ? (
+                <div className='flex items-center justify-center min-h-[80vh]'>
+                <Button onClick={connectWallet}>
+                    Connect Wallet
+                </Button>
                 </div>
-                <div className='board'>
-                    {renderBoard()}
+            ) : (
+                <div className='flex flex-col items-center space-y-4'>
+
+                    <div className='wallet-info'>
+                        {/* <p>Connected Account: {selectedAccount?.meta.name}</p> */}
+                        <select
+                            onChange={(e) => {
+                                const account = accounts.find(acc => acc.address === e.target.value);
+                                if (account) handleAccountChange(account);
+                            }}
+                            value={selectedAccount?.address}
+                            className='account-select'
+                        >
+                            {accounts.map((account) => (
+                                <option key={account.address} value={account.address}>
+                                    {account.meta.name} ({account.address.slice(0, 6)}...)
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+
+                    <h1 className='font-semibold text-2xl'>Snake and Ladder Game</h1>
+                    <div className='game-info'>
+                        <p>Current Player: Player {currentPlayer + 1}</p>
+                        <p>Dice Value: {diceValue}</p>
+                        <p>{gameMessage}</p>
+                    </div>
+                    <div className='board'>
+                        {renderBoard()}
+                    </div>
+                    <button
+                        onClick={rollDice}
+                        disabled={players.some(p => p.position >= BOARD_SIZE)}
+                        className='roll-button'
+                    >
+                        Roll Dice
+                    </button>
                 </div>
-                <button
-                    onClick={rollDice}
-                    disabled={players.some(p => p.position >= BOARD_SIZE)}
-                    className='roll-button'
-                >
-                    Roll Dice
-                </button>
-            </div>
+            )}
         </div>
     )
 }
