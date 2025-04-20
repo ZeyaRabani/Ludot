@@ -1,7 +1,7 @@
 # POLKALUDOT
 
 ## What is POLKALUDOT
-
+This is a snakes and ladders game instead now.
 ## Features
 
 ## Demo
